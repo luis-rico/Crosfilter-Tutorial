@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crossfilter Tutorial</title>
+    
+        <link rel="stylesheet" type="text/css" href="dc.css" media="screen" /> 
+        <script src='crossfilter.js'></script>
+        <script src='d3.min.js'></script>
+        <script src='dc.js'></script>
+    
+</head>
+<body class="application">
+
+  
+        <h2>My Chart</h2>
+        <div id="test">Here</div>
+    
+<script>
+
+// tutorial in http://blog.rusty.io/2012/09/17/crossfilter-tutorial/
+// & http://eng.wealthfront.com/2012/09/explore-your-multivariate-data-with-crossfilter.html
+
+// define data with 2 dogs, 1 cat, 1 human, 1 plant, print it
+
+var data = [{name: 'Titi', type: 'dog', legs: 4},
+            {name: 'Winnie', type: 'dog', legs: 4},
+            {name: 'Sisi', type: 'cat', legs: 4},
+            {name: 'Alex', type: 'human', legs: 2},
+            {name: 'Arbol', type: 'plant', legs: 0}
+           ];
+console.log(data);
+
+// create crossfilter object, print it
+
+var lista = crossfilter(data);
+console.log(lista);
+
+
+//dc.js bar chart type vs sum of legs
+// I have typeDim
+var typeDim = lista.dimension(function (feature) {return feature.type;});
+
+simpleGrouping = typeDim.group();
+console.log(simpleGrouping);
+
+var legsChart = dc.barChart("#test");
+                           
+legsChart
+        .dimension(typeDim)
+        .group(simpleGrouping)
+        .renderHorizontalGridLines(true)
+        .x(d3.scale.ordinal().domain(["plant", "dog", "cat", "human"]))
+        .xUnits(dc.units.ordinal)
+        .y(d3.scale.linear().domain([0, 5]));
+
+legsChart.render();
+    
+</script>
+
+	
+</body>
+
+</html>

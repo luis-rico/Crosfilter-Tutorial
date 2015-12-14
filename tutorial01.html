@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crossfilter Tutorial</title>
+    
+        <link rel="stylesheet" type="text/css" href="dc.css" media="screen" /> 
+        <script src='crossfilter.js'></script>
+        <script src='d3.min.js'></script>
+        <script src='dc.js'></script>
+    
+</head>
+<body class="application">
+
+  
+        <h2>My Chart</h2>
+        <div id="test">Here</div>
+    
+<script>
+
+// tutorial in http://blog.rusty.io/2012/09/17/crossfilter-tutorial/
+// & http://eng.wealthfront.com/2012/09/explore-your-multivariate-data-with-crossfilter.html
+
+
+// define data with 2 dogs, 1 cat, 1 human, 1 plant, print it
+
+var data = [{name: 'Titi', type: 'dog', legs: 4},
+            {name: 'Winnie', type: 'dog', legs: 4},
+            {name: 'Sisi', type: 'cat', legs: 4},
+            {name: 'Alex', type: 'human', legs: 2},
+            {name: 'Arbol', type: 'plant', legs: 0},
+            {name: 'Yo', type: 'human', legs: 2}
+           ];
+console.log(data);
+
+// create crossfilter object, print it
+
+var lista = crossfilter(data);
+console.log(lista);
+
+// print number of living things in the house
+var n = lista.groupAll().reduceCount().value();
+console.log('There are ' + n + ' living things in the house');
+
+// print number of legs in the house
+var nlegs = lista.groupAll().reduceSum(function(feature) {return feature.legs;}).value();
+console.log('There are ' + nlegs + ' legs in the house');
+
+// print number of dogs in the house
+var typeDim = lista.dimension(function (feature) {return feature.type;});
+typeDim.filter('dog')
+var n = lista.groupAll().reduceCount().value();
+console.log('There are ' + n + ' dogs in the house');
+
+//kill filters
+typeDim.filterAll();
+
+//dc.js bar chart type vs sum of legs
+// I have typeDim
+groupbylegs = typeDim.group().reduceSum(function (feature) {return feature.legs === 2;});
+
+simpleGrouping = typeDim.group();
+console.log(simpleGrouping);
+
+var legsChart = dc.barChart("#test");
+                           
+legsChart
+        .dimension(typeDim)
+        .group(groupbylegs)
+        .renderHorizontalGridLines(true)
+        .x(d3.scale.ordinal().domain(["plant", "dog", "cat", "human"]))
+        .xUnits(dc.units.ordinal)
+        .elasticY(true);
+
+legsChart.render();
+    
+    
+groupbylegsvalue = typeDim.groupAll().reduceSum(function (feature) {return feature.legs === 2;}).value();
+console.log('groupbylegs value is ' + groupbylegsvalue);    
+
+    
+</script>
+
+	
+</body>
+
+</html>

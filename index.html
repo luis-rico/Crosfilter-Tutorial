@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crossfilter Tutorial</title>
+    
+        <link rel="stylesheet" type="text/css" href="dc.css" media="screen" /> 
+        <script src='crossfilter.js'></script>
+        <script src='d3.min.js'></script>
+        <script src='dc.js'></script>
+    
+</head>
+<body class="application">
+
+  
+        <h2>My Chart</h2>
+        <div id="test">Here</div>
+    
+<script>
+
+var data= crossfilter([{"foo":"a"},{"foo":"b"},{"foo":"a"}]);
+
+var dimension = data.dimension(function (d) { return d.foo; });
+var group = dimension.group();
+
+dc.barChart("#test")
+    .dimension(dimension) 
+    .group(group) 
+    .x(d3.scale.ordinal().domain(["", "a", "b", "c"])) // Need the empty val to offset the first value
+    .y(d3.scale.linear().domain([0, 5]))
+    .xUnits(dc.units.ordinal) // Tell Dc.js that we're using an ordinal x axis
+    .brushOn(false)
+    .centerBar(true)
+    .xAxisPadding(50);
+
+dc.renderAll();
+    
+</script>
+
+	
+</body>
+
+</html>
